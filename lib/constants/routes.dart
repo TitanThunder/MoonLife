@@ -1,1 +1,2 @@
-const homePageRoute = "/home/";
+const overviewRoute = "/overview/";
+const homePageViewRoute = "/home/";

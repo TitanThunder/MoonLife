@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifestatistics/views/homepage_view.dart';
 
 import 'constants/routes.dart';
 
@@ -10,38 +11,74 @@ void main() {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const Overview(),
       routes: {
-        homePageRoute: (context) => const HomePage(),
+        overviewRoute: (context) => const Overview(),
+        homePageViewRoute: (context) => const HomepageView(),
       },
     ),
   );
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Overview extends StatelessWidget {
+  const Overview({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("HomePage"),
-      ),
-      body: const Text(
-        "TODO: think about UI for homepage",
-      ), //TODO: think about UI for homepage
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: "Home",
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("MoonLife"),
+            bottom: const TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.home_rounded)),
+                Tab(icon: Icon(Icons.list_rounded)),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            // Placeholder, to be changed later
-            icon: Icon(Icons.list_rounded),
-            label: "List",
+          body: const TabBarView(
+            children: [
+              Tab(
+                child: HomepageView(),
+              ),
+              Tab(icon: Icon(Icons.list_rounded)),
+            ],
           ),
-        ],
+          floatingActionButton: MenuAnchor(
+            // TODO: Put buttons in external enum-file
+            menuChildren: [
+              TextButton(
+                onPressed: () {},
+                child: const Text("Add category"),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text("Add entry"),
+              ),
+            ],
+            builder: (BuildContext context, MenuController controller,
+                Widget? child) {
+              return IconButton.filled(
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+                icon: const Icon(Icons.add_rounded),
+                style: const ButtonStyle(
+                  minimumSize: WidgetStatePropertyAll(
+                    Size.fromRadius(28),
+                  ),
+                ),
+              );
+            },
+            style: const MenuStyle(alignment: Alignment(-3, -5.5)),
+          ),
+        ),
       ),
     );
   }
