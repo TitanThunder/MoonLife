@@ -8,8 +8,8 @@ Make your own statistics about your life by tracking your progress in certain cu
 
 ## Upcoming Features
 - Add, modify, delete and see added categories
-    -> contains Name
+    -> contains name
 - Add, modify, delete and see added entries, assigned to a category
-    -> contains Description and Date
+    -> contains description and Date
 - Add a picture to an entry
-- Share Categories and entries
+- Share categories and entries
