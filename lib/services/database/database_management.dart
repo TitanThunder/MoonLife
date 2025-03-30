@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:ui';
 import 'package:lifestatistics/constants/db_constants.dart';
@@ -10,7 +11,22 @@ class DatabaseManager {
   Database? _db;
   List<DatabaseCategory> _categories = [];
   List<DatabaseEntry> _entries = [];
-  late Map<DatabaseCategory, List<DatabaseEntry>> _mappedEntries;
+
+  static final DatabaseManager _shared = DatabaseManager._sharedInstance();
+  DatabaseManager._sharedInstance() {
+    _categoriesStreamController =
+        StreamController<List<DatabaseCategory>>.broadcast(onListen: () {
+          _categoriesStreamController.sink.add(_categories);
+        });
+    _entriesStreamController =
+        StreamController<List<DatabaseEntry>>.broadcast(onListen: () {
+          _entriesStreamController.sink.add(_entries);
+        });
+  }
+  factory DatabaseManager() => _shared;
+
+  late final StreamController<List<DatabaseCategory>> _categoriesStreamController;
+  late final StreamController<List<DatabaseEntry>> _entriesStreamController;
 
   Future<void> open() async {
     if (_db != null) {
@@ -72,7 +88,10 @@ class DatabaseManager {
 
     final id = await db.insert(categoryTable, {categoryNameColumn: name});
 
-    return DatabaseCategory(id: id, name: name);
+    final category = DatabaseCategory(id: id, name: name);
+    _categories.add(category);
+    _categoriesStreamController.add(_categories);
+    return category;
   }
 
   Future<DatabaseCategory> getCategory({required String name}) async {
@@ -92,7 +111,137 @@ class DatabaseManager {
     }
   }
 
+  Future<Iterable<DatabaseCategory>> getAllCategories() async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+    final categories = await db.query(categoryTable);
+    return categories.map((categoryRow) => DatabaseCategory.fromRow(categoryRow));
+  }
+
+  Future<DatabaseCategory> updateCategory({
+    required DatabaseCategory category,
+    required String name,
+  }) async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+    await getEntry(id: category.id);
+
+    // update DB
+    final updatesCount = await db.update(
+      categoryTable,
+      {
+        categoryNameColumn: name,
+      },
+      where: "categoryid = ?",
+      whereArgs: [category.id],
+    );
+
+    if (updatesCount == 0) {
+      throw CouldNotUpdateCategoryException();
+    } else {
+      final updatedCategory = await getCategory(name: name);
+      _categories.removeWhere((category) => category.id == updatedCategory.id);
+      _categories.add(updatedCategory);
+      _categoriesStreamController.add(_categories);
+      return updatedCategory;
+    }
+  }
+
   Future<void> deleteCategory({required int id}) async {} // TODO: implement
+
+  Future<DatabaseEntry> createEntry({
+    required DatabaseCategory category,
+    required String date,
+  }) async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    // make sure category exists in the database
+    final dbCategory = getCategory(name: category.name);
+    if (dbCategory != category) {
+      throw new CouldNotFindCategoryException();
+    }
+
+    const text = "";
+    const picture = "";
+    // create the entry
+    final int entid = await db.insert(entryTable, {
+      categoryIDColumn: category.id,
+      textColumn: text,
+      dateColumn: date,
+      pictureColumn: picture,
+    });
+
+    final entry = DatabaseEntry(entid: entid, catid: category.id, date: date);
+    _entries.add(entry);
+    _entriesStreamController.add(_entries);
+    return entry;
+  }
+
+  Future<DatabaseEntry> getEntry({required int id}) async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+    final entries = await db.query(
+      entryTable,
+      limit: 1,
+      where: "entryid = ?",
+      whereArgs: [id],
+    );
+
+    if (entries.isEmpty) {
+      throw CouldNotFindEntryException();
+    } else {
+      final entry = DatabaseEntry.fromRow(entries.first);
+      _entries.removeWhere((entry) => entry.entid == id);
+      _entries.add(entry);
+      _entriesStreamController.add(_entries);
+      return entry;
+    }
+  }
+
+  Future<Iterable<DatabaseEntry>> getAllEntries() async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+    final entries = await db.query(entryTable);
+    return entries.map((entryRow) => DatabaseEntry.fromRow(entryRow));
+  }
+
+  Future<DatabaseEntry> updateEntry({
+    required DatabaseEntry entry,
+    String? text,
+    String? picture,
+  }) async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+    await getEntry(id: entry.entid);
+
+    text = text ?? "";
+    picture = picture ?? "";
+
+    // update DB
+    final updatesCount = await db.update(
+      entryTable,
+      {
+        textColumn: text,
+        pictureColumn: picture,
+      },
+      where: "entryid = ?",
+      whereArgs: [entry.entid],
+    );
+
+    if (updatesCount == 0) {
+      throw CouldNotUpdateEntryException();
+    } else {
+      final updatedEntry = await getEntry(id: entry.entid);
+      _entries.removeWhere((entry) => entry.entid == updatedEntry.entid);
+      _entries.add(updatedEntry);
+      _entriesStreamController.add(_entries);
+      return updatedEntry;
+    }
+  }
+
+  Future<void> deleteNote({required int id}) async {} // TODO: implement
+  Future<void> deleteallNotes() async {} // TODO: implement
 }
 
 class DatabaseCategory {
