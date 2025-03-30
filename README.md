@@ -6,7 +6,7 @@ Make your own statistics about your life by tracking your progress in certain cu
 ## Features
 --- Implementation in progress ---
 
-## Upcoming Features
+## Planned Features
 - Add, modify, delete and see added categories
     -> contains name
 - Add, modify, delete and see added entries, assigned to a category
