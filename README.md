@@ -1,6 +1,6 @@
 # lifestatistics
 
-Your life in numbers.
+Your life in numbers. /n
 Make your own statistics about your life by tracking your progress in certain custom categories.
 
 ## Features
