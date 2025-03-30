@@ -10,6 +10,6 @@ Make your own statistics about your life by tracking your progress in certain cu
 - Add, modify, delete and see added categories
     -> contains name
 - Add, modify, delete and see added entries, assigned to a category
-    -> contains description and Date
+    -> contains description and date
 - Add a picture to an entry
 - Share categories and entries
