@@ -13,3 +13,7 @@ class CouldNotFindEntryException implements Exception {}
 class CouldNotUpdateCategoryException implements Exception {}
 
 class CouldNotUpdateEntryException implements Exception {}
+
+class CouldNotDeleteCategoryException implements Exception {}
+
+class CouldNotDeleteEntryException implements Exception {}
