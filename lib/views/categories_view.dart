@@ -22,27 +22,27 @@ class _CategoriesViewState extends State<CategoriesView> {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder(
-      stream: _databaseManager.allCategories,
-      builder: (context, snapshot) {
-        if (snapshot == null) {
-          return Text("Add a new category to get started.");
-        }
-        final allCategories = snapshot.data as Iterable<DatabaseCategory>;
-        return CategoriesListView(
-          categories: allCategories,
-          onDeleteCategory: (category) async {
-            await _databaseManager.deleteCategory(id: category.id);
-          },
-          onTap: (category) {
-            Navigator.of(context).pushNamed(
-              updateCategoryRoute,
-              arguments: category,
-            );
-          },
-        );
-      },
-    );
+        stream: _databaseManager.allCategories,
+        builder: (context, snapshot) {
+          Iterable<DatabaseCategory> allCategories;
+          try {
+            allCategories = snapshot.data as Iterable<DatabaseCategory>;
+          } catch (e) {
+            return Text("Add a new category to get started.");
+          }
+          return CategoriesListView(
+            categories: allCategories,
+            onDeleteCategory: (category) async {
+              await _databaseManager.deleteCategory(id: category.id);
+            },
+            onTap: (category) {
+              Navigator.of(context).pushNamed(
+                updateCategoryRoute,
+                arguments: category,
+              );
+            },
+          );
+        });
   }
 }

@@ -11,7 +11,7 @@ const pictureColumn = "picture";
 const createCategoryTable = '''CREATE TABLE IF NOT EXISTS "category" (
                                "categoryid"	INTEGER NOT NULL UNIQUE,
                                "categoryname"	TEXT NOT NULL,
-                               PRIMARY KEY("categoryid" AUTOINCREMENT),
+                               PRIMARY KEY("categoryid" AUTOINCREMENT)
                                );''';
 const createEntryTable = '''CREATE TABLE "entry" (
 	                          "entryid"	INTEGER NOT NULL UNIQUE,

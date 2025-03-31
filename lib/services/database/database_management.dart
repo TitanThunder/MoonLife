@@ -128,6 +128,7 @@ class DatabaseManager {
   }*/
 
   Future<DatabaseCategory> getCategory({required int id}) async {
+    print("getCategory");
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final results = await db.query(

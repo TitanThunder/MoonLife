@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lifestatistics/views/categories_view.dart';
+import 'package:lifestatistics/views/create_update_category_view.dart';
 import 'package:lifestatistics/views/homepage_view.dart';
+import 'package:path/path.dart';
 
 import 'constants/routes.dart';
 
@@ -17,6 +19,7 @@ void main() {
         overviewRoute: (context) => const Overview(),
         homePageViewRoute: (context) => const HomepageView(),
         categoriesRoute: (context) => const CategoriesView(),
+        createCategoryRoute: (context) => const CreateUpdateCategoryView(),
       },
     ),
   );
@@ -54,7 +57,9 @@ class Overview extends StatelessWidget {
             // TODO: Put buttons in external enum-file
             menuChildren: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(context: context, builder: (BuildContext context) => CreateUpdateCategoryView());
+                },
                 child: const Text("Add category"),
               ),
               TextButton(
