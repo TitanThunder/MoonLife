@@ -8,7 +8,8 @@ class CreateUpdateCategoryView extends StatefulWidget {
   const CreateUpdateCategoryView({super.key});
 
   @override
-  State<CreateUpdateCategoryView> createState() => _CreateUpdateCategoryViewState();
+  State<CreateUpdateCategoryView> createState() =>
+      _CreateUpdateCategoryViewState();
 }
 
 class _CreateUpdateCategoryViewState extends State<CreateUpdateCategoryView> {
@@ -63,7 +64,8 @@ class _CreateUpdateCategoryViewState extends State<CreateUpdateCategoryView> {
     return newCategory;
   }
 
-  void _deleteCategoryIfNameIsEmpty() { // TODO: Existing entries might be deleted if name is empty => fix
+  void _deleteCategoryIfNameIsEmpty() {
+    // TODO: Existing entries might be deleted if name is empty => fix
     print("_deleteCategoryIfNameIsEmpty()");
 
     final category = _category;
@@ -80,7 +82,10 @@ class _CreateUpdateCategoryViewState extends State<CreateUpdateCategoryView> {
     final name = _textController.text;
     if (category != null && name.isNotEmpty) {
       print("_saveCategoryIfNameNotEmpty() 1");
-      await _databaseManager.updateCategory(category: category, name: name,);
+      await _databaseManager.updateCategory(
+        category: category,
+        name: name,
+      );
     }
   }
 
@@ -105,17 +110,23 @@ class _CreateUpdateCategoryViewState extends State<CreateUpdateCategoryView> {
         decoration: InputDecoration(hintText: "Enter the category's name..."),
       ),
       actions: [
-        TextButton(onPressed: () {
-          if (_textController.text.isNotEmpty) {
-            _saveCategoryIfNameNotEmpty();
+        TextButton(
+          onPressed: () {
+            if (_textController.text.isNotEmpty) {
+              _saveCategoryIfNameNotEmpty();
+              Navigator.of(context).pop();
+            } else {
+              //TODO: look for error handling
+            }
+          },
+          child: Text("Save"),
+        ),
+        TextButton(
+          onPressed: () {
             Navigator.of(context).pop();
-          } else {
-            //TODO: look for error handling
-          }
-        }, child: Text("Save"),),
-        TextButton(onPressed: () {
-          Navigator.of(context).pop();
-        }, child: Text("Cancel"),),
+          },
+          child: Text("Cancel"),
+        ),
       ],
     );
 

@@ -7,7 +7,7 @@ typedef CategoryCallback = void Function(DatabaseCategory category);
 
 class CategoriesListView extends StatelessWidget {
   final Iterable<DatabaseCategory> categories;
-  final CategoryCallback onDeleteCategory;
+  final CategoryCallback onDeleteCategory; // TODO: Maybe delete?
   final CategoryCallback onTap;
 
   const CategoriesListView({
@@ -28,7 +28,7 @@ class CategoriesListView extends StatelessWidget {
             onTap(category);
           },
           title: Text(category.name),
-          trailing: Text("0"),
+          trailing: Text("0"), // TODO: Implement count
         );
       },
     );

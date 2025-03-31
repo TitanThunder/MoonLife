@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lifestatistics/services/database/database_management.dart';
 import 'package:lifestatistics/views/categories_view.dart';
 import 'package:lifestatistics/views/create_update_category_view.dart';
+import 'package:lifestatistics/views/entries_view.dart';
 import 'package:lifestatistics/views/homepage_view.dart';
 import 'package:path/path.dart';
 
@@ -19,7 +21,8 @@ void main() {
         overviewRoute: (context) => const Overview(),
         homePageViewRoute: (context) => const HomepageView(),
         categoriesRoute: (context) => const CategoriesView(),
-        createCategoryRoute: (context) => const CreateUpdateCategoryView(),
+        createUpdateCategoryRoute: (context) => const CreateUpdateCategoryView(),
+        entriesRoute: (context) => const EntriesView(),
       },
     ),
   );
@@ -58,7 +61,10 @@ class Overview extends StatelessWidget {
             menuChildren: [
               TextButton(
                 onPressed: () {
-                  showDialog(context: context, builder: (BuildContext context) => CreateUpdateCategoryView());
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          CreateUpdateCategoryView());
                 },
                 child: const Text("Add category"),
               ),

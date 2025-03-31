@@ -35,6 +35,8 @@ class DatabaseManager {
   Stream<List<DatabaseCategory>> get allCategories =>
       _categoriesStreamController.stream;
 
+  Stream<List<DatabaseEntry>> get allEntries => _entriesStreamController.stream;
+
   Future<void> open() async {
     if (_db != null) {
       throw DatabaseAlreadyOpenException();
@@ -104,6 +106,7 @@ class DatabaseManager {
   }
 
   Future<void> _cacheCategories() async {
+    print("_cacheCategories()");
     final allCategories = await getAllCategories();
     _categories = allCategories.toList();
     _categoriesStreamController.add(_categories);
@@ -146,9 +149,11 @@ class DatabaseManager {
   }
 
   Future<Iterable<DatabaseCategory>> getAllCategories() async {
+
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final categories = await db.query(categoryTable);
+    print(categories.toString());
     return categories
         .map((categoryRow) => DatabaseCategory.fromRow(categoryRow));
   }
