@@ -1,16 +1,16 @@
 # lifestatistics
 
-Your life in numbers
+Your life in numbers. \
+Make your own statistics about your life by tracking your progress in certain custom categories.
 
-## Getting Started
+## Features
+--- Implementation in progress ---
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Planned Features
+- Add, modify, delete and see added categories
+    -> contains name
+- Add, modify, delete and see added entries, assigned to a category
+    -> contains description and date
+- Add a picture to an entry
+- Get a graphical representation of your statistics
+- Share categories and entries
