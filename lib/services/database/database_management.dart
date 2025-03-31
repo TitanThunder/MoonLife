@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:lifestatistics/constants/db_constants.dart';
+import 'package:lifestatistics/extensions/list/filter.dart';
 import 'package:lifestatistics/services/database/database_exceptions.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' show join;
+
+import 'database_category.dart';
+import 'database_entry.dart';
 
 class DatabaseManager {
   Database? _db;
@@ -27,6 +31,9 @@ class DatabaseManager {
   late final StreamController<List<DatabaseCategory>>
       _categoriesStreamController;
   late final StreamController<List<DatabaseEntry>> _entriesStreamController;
+
+  Stream<List<DatabaseCategory>> get allCategories =>
+      _categoriesStreamController.stream;
 
   Future<void> open() async {
     if (_db != null) {
@@ -189,7 +196,7 @@ class DatabaseManager {
       where: "categoryid = ?",
       whereArgs: [id],
     );
-    if(deletedCount == 0) {
+    if (deletedCount == 0) {
       throw CouldNotDeleteCategoryException();
     } else {
       _categories.removeWhere((category) => category.id == id);
@@ -312,7 +319,8 @@ class DatabaseManager {
     }
   }
 
-  Future<int> deleteAllEntriesOfCategory({required DatabaseCategory category}) async {
+  Future<int> deleteAllEntriesOfCategory(
+      {required DatabaseCategory category}) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
@@ -324,61 +332,4 @@ class DatabaseManager {
     _entriesStreamController.add(_entries);
     return deletedCount;
   }
-}
-
-class DatabaseCategory {
-  final int id;
-  final String name;
-
-  DatabaseCategory({
-    required this.id,
-    required this.name,
-  });
-
-  DatabaseCategory.fromRow(Map<String, Object?> map)
-      : id = map[categoryIDColumn] as int,
-        name = map[categoryNameColumn] as String;
-
-  @override
-  String toString() => "Category, id = $id, name = $name";
-
-  @override
-  bool operator ==(covariant DatabaseCategory other) => id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
-}
-
-class DatabaseEntry {
-  final int entid;
-  final int catid;
-  final String? text;
-  final String date;
-  final String? picture;
-
-  DatabaseEntry({
-    required this.entid,
-    required this.catid,
-    this.text,
-    required this.date,
-    this.picture,
-  });
-
-  DatabaseEntry.fromRow(Map<String, Object?> map)
-      : entid = map[entryIDColumn] as int,
-        catid = map[categoryIDColumn] as int,
-        text = map[textColumn] as String,
-        date = map[dateColumn] as String,
-        picture = map[pictureColumn] as String;
-
-  @override
-  String toString() =>
-      "Entry, entry id = $entid, category id = $catid, text = $text, date = $date";
-
-  @override
-  bool operator ==(covariant DatabaseEntry other) =>
-      entid == other.entid && catid == other.catid;
-
-  @override
-  int get hashCode => catid.hashCode;
 }

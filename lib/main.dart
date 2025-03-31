@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifestatistics/views/categories_view.dart';
 import 'package:lifestatistics/views/homepage_view.dart';
 
 import 'constants/routes.dart';
@@ -15,6 +16,7 @@ void main() {
       routes: {
         overviewRoute: (context) => const Overview(),
         homePageViewRoute: (context) => const HomepageView(),
+        categoriesRoute: (context) => const CategoriesView(),
       },
     ),
   );
@@ -43,7 +45,9 @@ class Overview extends StatelessWidget {
               Tab(
                 child: HomepageView(),
               ),
-              Tab(icon: Icon(Icons.list_rounded)),
+              Tab(
+                child: CategoriesView(),
+              ),
             ],
           ),
           floatingActionButton: MenuAnchor(
