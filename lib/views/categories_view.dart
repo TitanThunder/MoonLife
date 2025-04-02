@@ -19,6 +19,7 @@ class _CategoriesViewState extends State<CategoriesView> {
   @override
   void initState() {
     _databaseManager = DatabaseManager();
+    _databaseManager.getAllCategories();
     super.initState();
   }
 
@@ -32,6 +33,8 @@ class _CategoriesViewState extends State<CategoriesView> {
         try {
           allCategories = snapshot.data as Iterable<DatabaseCategory>;
         } catch (e) {
+          return Text("Add a new category to get started.");
+        } if (allCategories.isEmpty) {
           return Text("Add a new category to get started.");
         }
         return CategoriesListView(

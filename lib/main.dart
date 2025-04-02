@@ -36,14 +36,15 @@ class Overview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final databaseManager = DatabaseManager();
-    try {
+    /*try {
       databaseManager.open();
-    } on DatabaseAlreadyOpenException {}
+    } on DatabaseAlreadyOpenException {}*/
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            leading: Icon(Icons.shield_moon_rounded, color: Colors.deepPurple,),
             title: const Text("MoonLife"),
             bottom: const TabBar(
               tabs: [

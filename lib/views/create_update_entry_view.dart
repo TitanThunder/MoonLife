@@ -19,7 +19,7 @@ class _CreateUpdateEntryViewState extends State<CreateUpdateEntryView> {
   late final DatabaseManager _databaseManager;
   late final TextEditingController _textController;
 
-  late final List<DatabaseCategory> _categories;
+  late final Iterable<DatabaseCategory> _categories;
 
   late DatabaseCategory _selectedCategory;
   late String? _text;
@@ -41,6 +41,8 @@ class _CreateUpdateEntryViewState extends State<CreateUpdateEntryView> {
     final text = _textController.text;
     await _databaseManager.updateEntry(
       entry: entry,
+      category: _selectedCategory,
+      date: _date,
       text: text,
     );
   }
@@ -51,7 +53,8 @@ class _CreateUpdateEntryViewState extends State<CreateUpdateEntryView> {
   }
 
   Future<DatabaseEntry> createOrGetExistingCategory(
-      BuildContext context,) async {
+    BuildContext context,
+  ) async {
     _categories = await _databaseManager.allCategories.first;
     print("createOrGetExistingEntry");
     final widgetCategory = context.getArgument<DatabaseEntry>();
@@ -68,29 +71,72 @@ class _CreateUpdateEntryViewState extends State<CreateUpdateEntryView> {
     }
 
     print("createOrGetExistingEntry 1");
-    var text = "";
-    final newCategory = await _databaseManager.createEntry(category: DatabaseCategory(id: -1, name: ""), date: DateTime(0, 0, 0).toString());
-    _entry = newCategory;
-    return newCategory;
+    final tempCategory = await _databaseManager.allCategories.first;
+    _selectedCategory = tempCategory.first;
+    _date = DateTime(0, 0, 0).toString();
+
+    final newEntry = await _databaseManager.createEntry(
+        category: _selectedCategory,
+        date: _date
+    );
+    _entry = newEntry;
+    return newEntry;
+  }
+
+  _deleteEntryIfEmpty() async {
+    print("_deleteEntryIfEmpty");
+
+    final entry = _entry;
+    if (entry != null) {
+      _databaseManager.deleteEntry(entid: entry.entid);
+    }
   }
 
   void _saveEntryIfNotEmpty() async {
-    print(_saveEntryIfNotEmpty);
-    print(_entry.toString());
-
-
+    print("_saveEntryIfNotEmpty");
+    print("_entry.toString()");
   }
+
 
   @override
   Widget build(BuildContext context) {
     createOrGetExistingCategory(context);
-    return AlertDialog(
+    return StreamBuilder(
+      stream: _databaseManager.allCategories,
+      initialData: _databaseManager.getAllCategories(),
+      builder: (context, snapshot) {
+        Iterable<DatabaseCategory> allCategories;
+        print(_databaseManager.allCategories.first.toString());
+        try {
+          allCategories = snapshot.data as Iterable<DatabaseCategory>;
+        } catch (e) {
+          return AlertDialog(
+            title: Text("No category existent"),
+            content: TextButton(onPressed: () {}, child: Text("Create a category first")),
+          );
+        } if (allCategories.isEmpty) {
+          return AlertDialog(
+            title: Text("No category existent"),
+            content: TextButton(onPressed: () {}, child: Text("Create a category first")),
+          );
+        }
+        return AlertDialog(
+          title: Text("Create Entry"),
+          content: Column(
+            children: [
+              DropdownMenu(dropdownMenuEntries: UnmodifiableListView(allCategories.map((cat) => DropdownMenuEntry(value: cat.id, label: cat.name))),),
+            ],
+          ),
+        );
+      },
+    );
+    /*return AlertDialog(
       title: Text("Create Entry"),
       content: Column(
         children: [
-          DropdownMenu(dropdownMenuEntries: UnmodifiableListView(_categories.map((DatabaseCategory cat) => DropdownMenuEntry(value: cat.id, label: cat.name))),),
+          DropdownMenu(dropdownMenuEntries: UnmodifiableListView(),),//_categories.map((DatabaseCategory cat) => DropdownMenuEntry(value: cat.id, label: cat.name))),),
         ],
       ),
-    );
+    );*/
   }
 }

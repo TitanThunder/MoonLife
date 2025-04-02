@@ -277,7 +277,9 @@ class DatabaseManager {
 
   Future<DatabaseEntry> updateEntry({
     required DatabaseEntry entry,
+    required DatabaseCategory category,
     String? text,
+    required String date,
     String? picture,
   }) async {
     await _ensureDbIsOpen();
