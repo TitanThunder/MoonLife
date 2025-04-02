@@ -30,29 +30,34 @@ class _EntriesViewState extends State<EntriesView> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _databaseManager.allEntries,
-      builder: (context, snapshot) {
-        Iterable<DatabaseEntry> allEntries;
-        final category = context.getArgument<DatabaseCategory>() ?? DatabaseCategory(id: -1, name: "");
-        try {
-          allEntries = snapshot.data as Iterable<DatabaseEntry>;
-          allEntries =
-              allEntries.where((entry) => entry.catid == category.id);
-        } catch (e) {
-          return Text("Keep track of your progress by adding an Entry");
-        }
-        return EntriesListView(
-          category: category,
-          entries: allEntries,
-          onTap: (entry) {
-            Navigator.of(context).pushNamed(detailedEntryRoute, arguments: entry);
-          },
-          onLongPress: (entry) {
-            showDialog(context: context, builder: (BuildContext context) => CreateUpdateEntryView());
-          },
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.getArgument().getName),
+      ),
+      body: StreamBuilder(
+        stream: _databaseManager.allEntries,
+        builder: (context, snapshot) {
+          Iterable<DatabaseEntry> allEntries;
+          final category = context.getArgument<DatabaseCategory>() ?? DatabaseCategory(id: -1, name: "");
+          try {
+            allEntries = snapshot.data as Iterable<DatabaseEntry>;
+            allEntries =
+                allEntries.where((entry) => entry.catid == category.id);
+          } catch (e) {
+            return Text("Keep track of your progress by adding an Entry");
+          }
+          return EntriesListView(
+            category: category,
+            entries: allEntries,
+            onTap: (entry) {
+              Navigator.of(context).pushNamed(detailedEntryRoute, arguments: entry);
+            },
+            onLongPress: (entry) {
+              showDialog(context: context, builder: (BuildContext context) => CreateUpdateEntryView());
+            },
+          );
+        },
+      ),
     );
   }
 }

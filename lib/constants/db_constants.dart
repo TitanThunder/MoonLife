@@ -13,7 +13,7 @@ const createCategoryTable = '''CREATE TABLE IF NOT EXISTS "category" (
                                "categoryname"	TEXT NOT NULL,
                                PRIMARY KEY("categoryid" AUTOINCREMENT)
                                );''';
-const createEntryTable = '''CREATE TABLE "entry" (
+const createEntryTable = '''CREATE TABLE IF NOT EXISTS "entry" (
 	                          "entryid"	INTEGER NOT NULL UNIQUE,
 		                        "categoryid"	INTEGER NOT NULL,
 		                        "text"	TEXT,

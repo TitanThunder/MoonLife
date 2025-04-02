@@ -13,6 +13,8 @@ class DatabaseCategory {
       : id = map[categoryIDColumn] as int,
         name = map[categoryNameColumn] as String;
 
+  String get getName => name;
+
   @override
   String toString() => "Category, id = $id, name = $name";
 

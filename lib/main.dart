@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lifestatistics/services/database/database_exceptions.dart';
 import 'package:lifestatistics/services/database/database_management.dart';
 import 'package:lifestatistics/views/categories_view.dart';
 import 'package:lifestatistics/views/create_update_category_view.dart';
@@ -20,7 +21,6 @@ void main() {
       routes: {
         overviewRoute: (context) => const Overview(),
         homePageViewRoute: (context) => const HomepageView(),
-        categoriesRoute: (context) => const CategoriesView(),
         createUpdateCategoryRoute: (context) => const CreateUpdateCategoryView(),
         entriesRoute: (context) => const EntriesView(),
       },
@@ -33,6 +33,10 @@ class Overview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final databaseManager = DatabaseManager();
+    try {
+      databaseManager.open();
+    } on DatabaseAlreadyOpenException {}
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -46,13 +50,13 @@ class Overview extends StatelessWidget {
               ],
             ),
           ),
-          body: const TabBarView(
+          body: TabBarView(
             children: [
-              Tab(
+              const Tab(
                 child: HomepageView(),
               ),
               Tab(
-                child: CategoriesView(),
+                child: CategoriesView(databaseManager: databaseManager,),
               ),
             ],
           ),
@@ -64,7 +68,8 @@ class Overview extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) =>
-                          CreateUpdateCategoryView());
+                          CreateUpdateCategoryView(),
+                  );
                 },
                 child: const Text("Add category"),
               ),

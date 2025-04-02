@@ -149,7 +149,6 @@ class DatabaseManager {
   }
 
   Future<Iterable<DatabaseCategory>> getAllCategories() async {
-
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final categories = await db.query(categoryTable);

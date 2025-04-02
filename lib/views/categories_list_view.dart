@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:lifestatistics/extensions/list/get_argument.dart';
 import 'package:lifestatistics/services/database/database_category.dart';
 import 'package:lifestatistics/services/database/database_management.dart';
 
@@ -28,7 +29,7 @@ class CategoriesListView extends StatelessWidget {
             onTap(category);
           },
           title: Text(category.name),
-          trailing: Text("0"), // TODO: Implement count
+          trailing: Text(context.getArgument<DatabaseManager>()?.allEntries.length.toString() ?? "0"), // TODO: Implement count
         );
       },
     );
