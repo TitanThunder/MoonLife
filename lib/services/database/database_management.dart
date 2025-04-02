@@ -241,6 +241,7 @@ class DatabaseManager {
   }
 
   Future<void> _cacheEntries() async {
+    print("_cacheEntries()");
     final allEntries = await getAllEntries();
     _entries = allEntries.toList();
     _entriesStreamController.add(_entries);

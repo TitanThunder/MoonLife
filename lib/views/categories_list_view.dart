@@ -29,7 +29,12 @@ class CategoriesListView extends StatelessWidget {
             onTap(category);
           },
           title: Text(category.name),
-          trailing: Text(context.getArgument<DatabaseManager>()?.allEntries.length.toString() ?? "0"), // TODO: Implement count
+          trailing: Text(context
+                  .getArgument<DatabaseManager>()
+                  ?.allEntries
+                  .length
+                  .toString() ??
+              "0"),
         );
       },
     );

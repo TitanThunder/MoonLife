@@ -3,6 +3,7 @@ import 'package:lifestatistics/services/database/database_exceptions.dart';
 import 'package:lifestatistics/services/database/database_management.dart';
 import 'package:lifestatistics/views/categories_view.dart';
 import 'package:lifestatistics/views/create_update_category_view.dart';
+import 'package:lifestatistics/views/create_update_entry_view.dart';
 import 'package:lifestatistics/views/entries_view.dart';
 import 'package:lifestatistics/views/homepage_view.dart';
 import 'package:path/path.dart';
@@ -21,7 +22,8 @@ void main() {
       routes: {
         overviewRoute: (context) => const Overview(),
         homePageViewRoute: (context) => const HomepageView(),
-        createUpdateCategoryRoute: (context) => const CreateUpdateCategoryView(),
+        createUpdateCategoryRoute: (context) =>
+            const CreateUpdateCategoryView(),
         entriesRoute: (context) => const EntriesView(),
       },
     ),
@@ -50,13 +52,13 @@ class Overview extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(
+          body: const TabBarView(
             children: [
-              const Tab(
+              Tab(
                 child: HomepageView(),
               ),
               Tab(
-                child: CategoriesView(databaseManager: databaseManager,),
+                child: CategoriesView(),
               ),
             ],
           ),
@@ -66,15 +68,20 @@ class Overview extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          CreateUpdateCategoryView(),
+                    context: context,
+                    builder: (BuildContext context) =>
+                        CreateUpdateCategoryView(),
                   );
                 },
                 child: const Text("Add category"),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => CreateUpdateEntryView(),
+                  );
+                },
                 child: const Text("Add entry"),
               ),
             ],

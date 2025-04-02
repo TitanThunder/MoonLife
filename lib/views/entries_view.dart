@@ -10,7 +10,6 @@ import 'package:lifestatistics/views/entries_list_view.dart';
 import 'create_update_entry_view.dart';
 
 class EntriesView extends StatefulWidget {
-
   const EntriesView({
     super.key,
   });
@@ -38,7 +37,9 @@ class _EntriesViewState extends State<EntriesView> {
         stream: _databaseManager.allEntries,
         builder: (context, snapshot) {
           Iterable<DatabaseEntry> allEntries;
-          final category = context.getArgument<DatabaseCategory>() ?? DatabaseCategory(id: -1, name: "");
+          final category = context.getArgument<DatabaseCategory>() ??
+              DatabaseCategory(id: -1, name: "");
+          print(category);
           try {
             allEntries = snapshot.data as Iterable<DatabaseEntry>;
             allEntries =
@@ -50,10 +51,13 @@ class _EntriesViewState extends State<EntriesView> {
             category: category,
             entries: allEntries,
             onTap: (entry) {
-              Navigator.of(context).pushNamed(detailedEntryRoute, arguments: entry);
+              Navigator.of(context)
+                  .pushNamed(detailedEntryRoute, arguments: entry);
             },
             onLongPress: (entry) {
-              showDialog(context: context, builder: (BuildContext context) => CreateUpdateEntryView());
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => CreateUpdateEntryView());
             },
           );
         },

@@ -4,7 +4,7 @@ class DatabaseCategory {
   final int id;
   final String name;
 
-  DatabaseCategory({
+  const DatabaseCategory({
     required this.id,
     required this.name,
   });
